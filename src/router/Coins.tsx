@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import {fetchCoins} from "../api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -51,7 +52,7 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-interface ICoins {
+interface ICoin {
     id: string;
     name: string;
     symbol: string;
@@ -59,21 +60,12 @@ interface ICoins {
     is_new: boolean;
     is_active: boolean;
     type: string;
-  }
+}
 
 
 function Coins() {
-    const [loading, setLoading] = useState(true);
-    const [coins, setCoins] = useState<ICoins[]>([]);
 
-    useEffect(() => {
-        (async() => {
-            const response = await fetch("https://api.coinpaprika.com/v1/coins");
-            const coins = await response.json();
-            setCoins(coins.slice(0, 20));
-            setLoading(false);
-        })();
-    }, []);
+  const {isLoading: loading, data: coins } = useQuery<ICoin[]>("COINS", fetchCoins);
 
     return (
         <Container>
@@ -87,7 +79,7 @@ function Coins() {
           ) : (
             <CoinsList>
                 {
-                    coins.map((coin) => (
+                    coins?.slice(0,20).map((coin) => (
                         <Coin key={coin.id}>
                             <Link to={{
                                 pathname: `/${coin.id}`,

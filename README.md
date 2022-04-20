@@ -1,3 +1,16 @@
+2022-04-20
+
+- react-query
+
+  - fetch 함수를 실행, cache 에 저장해 준다.
+  - 키값을 지정해서 키값이 없을 경우에 fetch 함수 실행, 있으면 실행하지 않는다.
+  - 세번째 인자에서, refresh 간격을 조정할 수 있다.
+
+  install package
+
+      - apexcharts
+      - helmet
+
 2022-04-19
 
 - typescript Interface 작성시에는 보통 I<데이터명> 형태

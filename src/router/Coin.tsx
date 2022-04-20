@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link, matchPath, matchRoutes, Outlet, useMatch, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Link, Outlet, useMatch, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -94,55 +95,46 @@ interface IInfoData {
     first_data_at: string;
     last_data_at: string;
   }
-  interface IPriceInfo {
-    id: string;
-    name: string;
-    symbol: string;
-    rank: number;
-    circulating_supply: number;
-    total_supply: number;
-    max_supply: number;
-    beta_value: number;
-    first_data_at: string;
-    last_updated: string;
-    quotes: {
-      USD: {
-        ath_date: string;
-        ath_price: number;
-        market_cap: number;
-        market_cap_change_24h: number;
-        percent_change_1h: number;
-        percent_change_1y: number;
-        percent_change_6h: number;
-        percent_change_7d: number;
-        percent_change_12h: number;
-        percent_change_15m: number;
-        percent_change_24h: number;
-        percent_change_30d: number;
-        percent_change_30m: number;
-        percent_from_price_ath: number;
-        price: number;
-        volume_24h: number;
-        volume_24h_change_24h: number;
-      };
+interface ITickersData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: string;
+  last_updated: string;
+  quotes: {
+    USD: {
+      ath_date: string;
+      ath_price: number;
+      market_cap: number;
+      market_cap_change_24h: number;
+      percent_change_1h: number;
+      percent_change_1y: number;
+      percent_change_6h: number;
+      percent_change_7d: number;
+      percent_change_12h: number;
+      percent_change_15m: number;
+      percent_change_24h: number;
+      percent_change_30d: number;
+      percent_change_30m: number;
+      percent_from_price_ath: number;
+      price: number;
+      volume_24h: number;
+      volume_24h_change_24h: number;
     };
-  }
+  };
+}
 
 function Coin() {
-    const [loading, setLoading] = useState(true);
-    const {coinId} = useParams() as unknown as RouteParams;
-    const [coinInfo, setCoinInfo] = useState<IInfoData>();
-    const [priceInfo, setPriceData] = useState<IPriceInfo>();
-    
-    useEffect(()=> {
-        (async() => {
-            const coinInfo = await( await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
-            const priceData = await ( await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-            setCoinInfo(coinInfo);
-            setPriceData(priceData);
-            setLoading(false);
-        })();
-    },[coinId]);
+  const {coinId} = useParams() as unknown as RouteParams;
+
+  const { isLoading: infoLoading, data: coinInfo} = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId));
+  const { isLoading: tickersLoading, data: tickersData} = useQuery<ITickersData>(["tickers", coinId], () => fetchCoinTickers(coinId))
+const loading = infoLoading || tickersLoading;
 
     const isPrice = useMatch(`/${coinId}/price`);
     const isChart = useMatch(`/${coinId}/chart`);
@@ -169,19 +161,19 @@ function Coin() {
                             <span>${coinInfo?.symbol}</span>
                             </OverviewItem>
                             <OverviewItem>
-                            <span>Open Source:</span>
-                            <span>{coinInfo?.open_source ? "Yes" : "No"}</span>
+                            <span>Price</span>
+                            <span>$ {tickersData?.quotes.USD.price.toFixed(2)}</span>
                             </OverviewItem>
                         </Overview>
                         <Description>{coinInfo?.description}</Description>
                         <Overview>
                             <OverviewItem>
                             <span>Total Suply:</span>
-                            <span>{priceInfo?.total_supply}</span>
+                            <span>{tickersData?.total_supply}</span>
                             </OverviewItem>
                             <OverviewItem>
                             <span>Max Supply:</span>
-                            <span>{priceInfo?.max_supply}</span>
+                            <span>{tickersData?.max_supply}</span>
                             </OverviewItem>
                         </Overview>
 
@@ -199,7 +191,7 @@ function Coin() {
 
                         </Tabs>
 
-                        <Outlet />
+                        <Outlet context={[coinId]} />
                     </>
                 )
             }

@@ -19,8 +19,23 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
+const Back = styled.div`
+  margin-top: 20px;
+  
+  a {
+    align-items: center;
+    padding: 20px;
+    transition: color 0.2s ease-in;
+    &:hover {
+      
+        color: ${(props) => props.theme.accentColor};
+      
+    }
+  }
+`;
+
 const Header = styled.header`
-  height: 15vh;
+  height: 13vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,25 +91,25 @@ interface RouteParams {
 }
 
 interface IInfoData {
-    id: string;
-    name: string;
-    symbol: string;
-    rank: number;
-    is_new: boolean;
-    is_active: boolean;
-    type: string;
-    description: string;
-    message: string;
-    open_source: boolean;
-    started_at: string;
-    development_status: string;
-    hardware_wallet: boolean;
-    proof_type: string;
-    org_structure: string;
-    hash_algorithm: string;
-    first_data_at: string;
-    last_data_at: string;
-  }
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+  description: string;
+  message: string;
+  open_source: boolean;
+  started_at: string;
+  development_status: string;
+  hardware_wallet: boolean;
+  proof_type: string;
+  org_structure: string;
+  hash_algorithm: string;
+  first_data_at: string;
+  last_data_at: string;
+}
 interface ITickersData {
   id: string;
   name: string;
@@ -132,15 +147,25 @@ interface ITickersData {
 function Coin() {
   const {coinId} = useParams() as unknown as RouteParams;
 
-  const { isLoading: infoLoading, data: coinInfo} = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-  const { isLoading: tickersLoading, data: tickersData} = useQuery<ITickersData>(["tickers", coinId], () => fetchCoinTickers(coinId))
-const loading = infoLoading || tickersLoading;
+  const { isLoading: infoLoading, data: coinInfo} = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId), {
+    // refetchInterval: 10000
+  });
+  const { isLoading: tickersLoading, data: tickersData} = useQuery<ITickersData>(["tickers", coinId], () => fetchCoinTickers(coinId), {
+    //refetchInterval: 5000
+  })
+
+  const loading = infoLoading || tickersLoading;
 
     const isPrice = useMatch(`/${coinId}/price`);
     const isChart = useMatch(`/${coinId}/chart`);
 
     return (
         <Container>
+        <Back> 
+          <Link to="/">
+          &larr; back
+          </Link>
+        </Back>
         <Header>
             <Title>
             {loading ? <Loader>Loading...</Loader> : coinInfo?.name}
@@ -191,7 +216,7 @@ const loading = infoLoading || tickersLoading;
 
                         </Tabs>
 
-                        <Outlet context={[coinId]} />
+                        <Outlet context={[coinId, tickersData?.quotes.USD]} />
                     </>
                 )
             }

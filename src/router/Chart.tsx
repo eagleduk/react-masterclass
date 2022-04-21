@@ -2,6 +2,12 @@ import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
 import { fetchCoinOHLCV } from "../api";
 import ApexCharts from "react-apexcharts"
+import styled from "styled-components";
+
+const Loader = styled.span`
+  text-align: center;
+  display: block;
+`;
 
 interface IOHLCV {
     time_open: string;
@@ -20,6 +26,7 @@ function Chart() {
     const {isLoading, data} = useQuery<IOHLCV[]>(["ohlcv", coinId], () => fetchCoinOHLCV(coinId));
     return (
         <>
+        {isLoading ? <Loader>Loading...</Loader> : 
             <ApexCharts 
                 width={"100%"} 
                 height={500} 
@@ -63,7 +70,7 @@ function Chart() {
                         }
                     }
                 }}
-            />
+            />}
         </>
     )
 }

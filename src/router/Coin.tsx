@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import { Link, Outlet, useMatch, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import {Helmet} from "react-helmet-async";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -176,6 +177,11 @@ function Coin() {
                 loading ? null :
                 (
                     <>
+                      <Helmet>
+                          <title>
+                            {coinInfo?.name}
+                          </title>
+                      </Helmet>
                         <Overview>
                             <OverviewItem>
                             <span>Rank:</span>

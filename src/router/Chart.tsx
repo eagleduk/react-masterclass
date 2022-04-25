@@ -3,6 +3,8 @@ import { useOutletContext } from "react-router-dom";
 import { fetchCoinOHLCV } from "../api";
 import ApexCharts from "react-apexcharts"
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { isDarkmodeAtom } from "../atoms";
 
 const Loader = styled.span`
   text-align: center;
@@ -24,6 +26,7 @@ interface IOHLCV {
 function Chart() {
     const [coinId] = useOutletContext<string[]>();
     const {isLoading, data} = useQuery<IOHLCV[]>(["ohlcv", coinId], () => fetchCoinOHLCV(coinId));
+    const isDark = useRecoilState(isDarkmodeAtom);
     return (
         <>
         {isLoading ? <Loader>Loading...</Loader> : 
@@ -41,7 +44,7 @@ function Chart() {
                 }]} 
                 options={{
                     theme: {
-                        mode: "dark"
+                        mode: isDark ? "dark" : "light"
                     },
                     chart: {
                         type: "candlestick",

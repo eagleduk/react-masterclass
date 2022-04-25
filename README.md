@@ -1,3 +1,22 @@
+2022-04-25
+
+- recoil
+
+  - state 관리를 위한 Package
+  - useState Hook 을 이용하여 state 을 전달하는 레벨이 깊어질 수록 버그 발생율이 높기 때문에 전역적으로 state 을 사용하기 위한 Package
+  - useRecoilState 로 저장된 atom 의 state 값을 가져온다.
+  - useSetRecoilState 로 state 를 변경할 function 을 가져온다. useState 의 function 과 비슷.
+
+- react-helmet-async
+
+  - react-helmet 이 동작하지 않아 react-helmet-async 설치
+  - App.js 를 HelmetProvider 로 감싸준다
+
+  install package
+
+      - react-helmet-async
+      - recoil
+
 2022-04-20
 
 - react-query

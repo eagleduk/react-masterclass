@@ -4,6 +4,8 @@ import App from './App';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import { RecoilRoot } from 'recoil';
+import { ThemeProvider } from 'styled-components';
+import { darkModeTheme } from './theme';
 
 
 const queryClient = new QueryClient()
@@ -13,6 +15,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+  <ThemeProvider theme={darkModeTheme} >
     <QueryClientProvider client={queryClient}>
 		<HelmetProvider>
 			<RecoilRoot>
@@ -20,5 +23,6 @@ root.render(
 			</RecoilRoot>
 		</HelmetProvider>
     </QueryClientProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

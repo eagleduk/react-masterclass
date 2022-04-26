@@ -1,9 +1,6 @@
-import Router from "./Router";
-import {createGlobalStyle, ThemeProvider} from "styled-components";
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { isDarkmodeAtom } from "./atoms";
-import { darkModeTheme, lightModeTheme } from "./theme";
-import { useRecoilValue } from "recoil";
+
+import {createGlobalStyle} from "styled-components";
+import ToDoList from "./ToDoList";
 
 
 const GlobalComponent = createGlobalStyle`
@@ -71,15 +68,10 @@ a {
 
 function App() {
 	
-	const isDark = useRecoilValue(isDarkmodeAtom);
   return (
     <>
-		<ThemeProvider theme={isDark ? darkModeTheme : lightModeTheme} >
-			<GlobalComponent />
-				<Router />
-			<ReactQueryDevtools  />
-			
-		</ThemeProvider>
+		<GlobalComponent />
+		<ToDoList />
     </>
   );
 }

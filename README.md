@@ -1,3 +1,23 @@
+---------------------------------------- To Do DnD ----------------------------------------
+2022-05-02
+
+- 작업 내용
+
+  - drag & drop 을 이용한 todo list 만들기
+  - Normal Todo Task를 D&D 사용
+  - https://www.npmjs.com/package/react-beautiful-dnd 이미지 참조
+
+- 코드 챌린지
+
+  - todo 삭제
+  - todo category 추가
+  - localStorage 저장
+  - Board Category Drag & drop
+
+<b>install package</b>
+
+    - react-hook-form
+
 ---------------------------------------- To Do ----------------------------------------
 
 2022-04-28
@@ -28,9 +48,9 @@
   - form 에 관련된 제어를 가능하게 해주는 Hook
   - form 안에 있는 input 데이터들의 관리를 도와준다.
 
-  install package
+<b>install package</b>
 
-      - react-hook-form
+    - react-hook-form
 
 ---------------------------------------- CRYPTO TRACKER ----------------------------------------
 
@@ -48,10 +68,10 @@
   - react-helmet 이 동작하지 않아 react-helmet-async 설치
   - App.js 를 HelmetProvider 로 감싸준다
 
-  install package
+<b>install package</b>
 
-      - react-helmet-async
-      - recoil
+    - react-helmet-async
+    - recoil
 
 2022-04-20
 
@@ -61,10 +81,10 @@
   - 키값을 지정해서 키값이 없을 경우에 fetch 함수 실행, 있으면 실행하지 않는다.
   - 세번째 인자에서, refresh 간격을 조정할 수 있다.
 
-  install package
+<b>install package</b>
 
-      - apexcharts
-      - helmet
+    - apexcharts
+    - helmet
 
 2022-04-19
 
@@ -94,14 +114,14 @@
 
 2022-04-18 < 초기 개발 설정 >
 
-    install package
+<b>install package</b>
 
-        - react-router-dom(v6)
-        - react-query
-        - styled-component
+      - react-router-dom(v6)
+      - react-query
+      - styled-component
 
-    resetCss
+resetCss
 
-    google-font
+google-font
 
-    Styled-component Theme Setting
+Styled-component Theme Setting

@@ -1,7 +1,5 @@
 
 import {createGlobalStyle} from "styled-components";
-import ToDoMain from "./todos/ToDoMain";
-
 
 const GlobalComponent = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -71,7 +69,7 @@ function App() {
   return (
     <>
 		<GlobalComponent />
-		<ToDoMain />
+		Drag & Drop ToDO
     </>
   );
 }

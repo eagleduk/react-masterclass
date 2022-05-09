@@ -3,6 +3,8 @@
 2022-05-09
 
 - React.StrictMode 모드시 drag & drop 정상 동작 안함으로 인한 삭제
+- drag & drop 을 이용한 todo list 만들기
+- todo 삭제
 
 2022-05-02
 

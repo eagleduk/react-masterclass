@@ -1,3 +1,17 @@
+---------------------------------------- Framer Animation ----------------------------------------
+
+2022-05-16
+
+- 여러가지 animation 기능을 지원해 주는 react library
+- hover, drag, scroll 등 css animation 을 원하는 스타일을 지정 가능하게 해준다.
+- www.framer.com/motion/ 화면의 예제
+- slider 기능
+- www.framer.com/docs/introduction/ 참조
+
+<b>install package</b>
+
+    - framer motion (npm install framer-motion)
+
 ---------------------------------------- To Do DnD ----------------------------------------
 
 2022-05-09

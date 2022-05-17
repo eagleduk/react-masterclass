@@ -1,5 +1,12 @@
 ---------------------------------------- Framer Animation ----------------------------------------
 
+2022-05-17
+
+- Motion(animation, variants, gestures, drag, scroll, path, slider 및 popup) 기능 구현
+- 각 모듈 title 클릭시 팝업으로 표시
+- 팝업 외부 클릭 시 팝업 닫기 구현
+- 추후 연습시 모듈 추가 가능
+
 2022-05-16
 
 - 여러가지 animation 기능을 지원해 주는 react library

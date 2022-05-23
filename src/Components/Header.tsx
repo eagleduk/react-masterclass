@@ -13,6 +13,7 @@ const Navbar = styled(motion.header)`
     padding: 0px 40px;
     box-sizing: border-box;
     top: 0;
+    z-index: 100;
 `;
 
 const Items = styled.ul`
@@ -104,7 +105,7 @@ export default function Header() {
             </Item>
             <Item>
                 <Link to="/series">
-                    Series
+                    SERIES
                 </Link>
             </Item>
         </Items>

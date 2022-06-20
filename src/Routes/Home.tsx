@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getPopularTVSeries, IPopularTVSeries } from "../api";
+import { getPopularTVSeries, getTVGeners, IPopularTVSeries, ITvGenerList, ITVSeries } from "../api";
 import { makeImagePath } from "../utils";
 import {motion, AnimatePresence} from "framer-motion";
 import { useState } from "react";
@@ -44,13 +44,13 @@ const Slider = styled(motion.section)`
         border-width: 0;
         color: ${props=>props.theme.white.lighter};
         cursor: pointer;
+        z-index: 200;
     }
     overflow: hidden;
 `;
 
 const ItemWrapper = styled(motion.div)`
     width: 100%;
-    overflow: hidden;
     display: flex;
     position: relative;
     height: 100%;
@@ -66,18 +66,106 @@ const Items = styled(motion.section)`
     height: 100%;
 `;
 
-const Item = styled(motion.section)`
-    background-color: white;
-    height: 100%;
+const Item = styled(motion.section)<{image:string}>`
+    /* background-color: white; */
+    background-image: url(${props => (props.image)});
+    background-size: 100% 100%;
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+    span {
+        opacity: 0;
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        height: 50px;
+        background-color: rgba(0,0,0,.8);
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        text-overflow: ellipsis;
+    }
+    &:hover {
+        span {
+            opacity: 1;
+        }
+    }
 `;
+
+const PopupWrapper = styled(motion.div)`
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+    background-color: rgba(0,0,0,.8);
+    z-index: 300;
+    &>div {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
+
+const PopupItem = styled(motion.div)`
+    width: 40%;
+    height: 80%;
+    position: absolute;
+    top: 80px;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,1);
+`;
+
+const PopupPoster = styled(motion.div)<{image:string}>`
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,11)), url(${props => (props.image)});
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    width: 100%;
+    height: 60%;
+`;
+
+const PopupTitile = styled.span`
+    display: block;
+    font-size: 44px;
+    margin-top: -60px;
+    margin-left: 20px;                   
+`;
+
+const PopupGenres = styled.div`
+    display: flex;
+    margin: 5px 20px;
+    gap: 10px;
+    margin-bottom: 20px;
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: rgba(128, 128, 128, .5);
+    }
+`;
+
+const PopupOverview = styled.p`
+    margin: 0 20px;
+    width: 50%;
+    line-height: 25px;
+`;
+
 
 const sliderVariants = {
     initial: (popularReverse:boolean) => {
         return {
-            // opacity: 0,
+            opacity: 0,
             // scaleX:0,
             // transformOrigin: popularReverse ? "right" : "left",
-            x: popularReverse ? "calc(100vw - 175px)" : "calc(-100vw + 175px)"
+            x: !popularReverse ? "calc(100vw - 175px)" : "calc(-100vw + 175px)"
         }
     },
     animate: {
@@ -87,18 +175,21 @@ const sliderVariants = {
     },
     exitA: (popularReverse:boolean) => {
         return {
-            // opacity: 0,
+            opacity: 0,
             // zIndex: 100,
             // scaleX: 0,
             // transformOrigin: popularReverse ? "left" : "right",
-            x: !popularReverse ? "calc(100vw - 175px)" : "calc(-100vw + 175px)"
+            x: popularReverse ? "calc(100vw - 175px)" : "calc(-100vw + 175px)"
         }
     },
 }
 
+const PAGECOUNT = 6;
+
 export default function Home() {
     const [popularPage, setPopularPage] = useState(0);
     const [popularReverse, setPopularReverse] = useState(false);
+    const [popupView, setPopupView] = useState<ITVSeries | null>(null);
     const {data, isLoading} = useQuery<IPopularTVSeries>(["tvSeries", "popular"], getPopularTVSeries);
     
     const onPrevPage = () => {
@@ -110,6 +201,7 @@ export default function Home() {
         setPopularReverse(false);
         setPopularPage(current => current + 1);
     }
+    const {data: genres} = useQuery<ITvGenerList>(["tvSeries", "genre"], getTVGeners);    
 
     return <Wrapper> 
         {
@@ -139,7 +231,21 @@ export default function Home() {
                                 }}
                             >
                                 {
-                                    [1,2,3,4,5,6].map(i => <Item key={String(i)} > {i} </Item>)
+                                    data?.results && [0,1,2,3,4,5].map(i => {
+                                        const index = (PAGECOUNT * popularPage + i) % (data.results.length - 2);
+                                        const result = data.results.slice(1)[Math.abs(index)];
+                                        return (<Item 
+                                            key={String(result.id)} 
+                                            whileHover={{ scale: 1.2, zIndex: 200}}
+                                            image = {makeImagePath(result.poster_path)} 
+                                            onClick={() => setPopupView(result)}
+                                            layoutId={String(result.id)}
+                                        >                                         
+                                            <span>
+                                                {result.name}
+                                            </span>
+                                         </Item>);
+                                    })
                                 }
                             </Items>
                         </AnimatePresence>
@@ -150,5 +256,34 @@ export default function Home() {
                 </Slider>
             </>
         }
+    {popupView && <AnimatePresence>
+        <PopupWrapper onClick={() => setPopupView(null)}>
+            <div>
+                <PopupItem 
+                    layoutId={String(popupView.id)}
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <PopupPoster image={makeImagePath(popupView.backdrop_path)} />
+
+                    <PopupTitile>
+                        {popupView.name}
+                    </PopupTitile>
+
+                    <PopupGenres>
+                        {
+                            popupView.genre_ids.map(ids => {
+                                return genres?.genres.map(genres => genres.id === ids ? <span>{genres.name}</span> : null)
+                            })
+                        }
+                    </PopupGenres>
+                    <PopupOverview>
+                        {popupView.overview}
+                    </PopupOverview>
+
+                </PopupItem>
+            </div>
+        </PopupWrapper>
+    </AnimatePresence>
+    }
     </Wrapper>;
 }

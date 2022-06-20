@@ -7,13 +7,13 @@ export function getMovies() {
   );
 }
 
-
-interface ITVSeries {
+export interface ITVSeries {
     backdrop_path: string;
     overview: string;
     name: string;
     id: number;
     poster_path: string;
+    genre_ids: number[];
 }
 
 export interface IPopularTVSeries {
@@ -24,4 +24,17 @@ export function getPopularTVSeries() {
   return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}`).then(
     (response) => response.json()
   );
+}
+
+export function getTVGeners() {
+  return fetch(`${BASE_PATH}/genre/tv/list?api_key=${API_KEY}`).then((response) => response.json());
+}
+
+export interface ITvGener {
+  id: number;
+  name: string;
+}
+
+export interface ITvGenerList {
+    genres: ITvGener[]
 }
